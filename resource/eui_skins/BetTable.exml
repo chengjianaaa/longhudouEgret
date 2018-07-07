@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetTable" width="794" height="1485" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" >
+	<w:Declarations>
+		<tween:TweenGroup id="betTips">
+			<tween:TweenItem target="{notice1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{notice2}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000"/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{notice3}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000"/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image id="table" source="table_png" x="0" y="0"/>
+	<e:Label id="ratioHe1" text="8 倍" x="240" y="723.82" rotation="89.98" textColor="0xF0BD51" size="34" fontFamily="SourceHanSansCN-Regular"/>
+	<e:Label id="ratioLong" text="2 倍" x="230" y="351.68" rotation="89.98" textColor="0xF0BD51" size="34" fontFamily="SourceHanSansCN-Regular"/>
+	<e:Label id="ratioHu" text="2 倍" x="227.34" y="1090.49" rotation="89.98" textColor="0xF0BD51" size="34" fontFamily="SourceHanSansCN-Regular"/>
+	<e:Label id="betCoin" text="下注金额：100" x="639.84" y="606.03" rotation="89.86" anchorOffsetX="0" width="275.48" anchorOffsetY="0" height="66.84" verticalAlign="middle" textAlign="center" textColor="0x8ee6fd" size="34" fontFamily="SourceHanSansCN-Regular" visible="false"/>
+	<e:Group id="alarmGroup" width="123.64" height="328" x="559.32" y="580.68" anchorOffsetX="0.82" anchorOffsetY="2.18">
+		<e:Image source="clock_png" x="9.94" y="34.5"/>
+		<e:Label id="time" text="0S" x="65.11" y="43.49" rotation="89.98" textColor="0xfdf2b7" size="24" fontFamily="SourceHanSansCN-Regular" width="60" height="40" verticalAlign="middle" textAlign="center"/>
+		<e:Label id="readyTimeLabel" text="0S" x="65.11" y="43.49" rotation="89.98" textColor="0xFDF2B7" size="34" fontFamily="SourceHanSansCN-Regular" width="60" height="40" verticalAlign="middle" textAlign="center" visible="false"/>
+		<e:Label id="timeNotice" text="下注时间" x="62.11" y="127.03" rotation="89.98" textColor="0xfdf2b7" size="34" fontFamily="SourceHanSansCN-Regular"/>
+	</e:Group>
+	<e:Group id="notice1Group" width="300" height="298.48" x="262" y="221" anchorOffsetX="0" anchorOffsetY="0" name="betLong">
+		<e:Image id="notice1" source="djxz_png" x="122.35000000000002" y="60.23999999999998" scaleX="1" scaleY="1"/>
+		<e:Image id="longRes" source="poker_back_png" x="292.63" y="151.1" rotation="90.06" anchorOffsetX="54.5" anchorOffsetY="69"/>
+	</e:Group>
+	<e:Group id="notice2Group" width="309.09" height="300" x="258" y="592" anchorOffsetX="0" anchorOffsetY="0" name="betHe">
+		<e:Image id="notice2" source="djxz_png" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+	<e:Group id="notice3Group" width="312.12" height="307.58" x="258" y="958" anchorOffsetX="0" anchorOffsetY="0" name="betHu">
+		<e:Image id="notice3" source="djxz_png" x="126.35000000000002" y="70.66999999999996" scaleX="1" scaleY="1"/>
+		<e:Image id="huRes" source="poker_back_png" x="304.34" y="155.57" rotation="89.92" anchorOffsetX="54.5" anchorOffsetY="69"/>
+	</e:Group>
+</e:Skin>
