@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="Croupier" width="419" height="296" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Image id="croupier" source="girl_png" y="18.12" rotation="359.95" horizontalCenter="73"/>
-</e:Skin>

@@ -4,7 +4,7 @@ class MenuUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/Menu.exml";
+        this.skinName = "resource/eui_skins/diySkin/Menu.exml";
     }
 
     public home: eui.Image;

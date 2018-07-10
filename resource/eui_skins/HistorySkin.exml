@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="HistorySkin" width="390" height="171" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Image id="trend" source="trend_png" x="44" y="0"/>
-	<e:Image id="record" source="record_png" x="210" y="0"/>
-</e:Skin>

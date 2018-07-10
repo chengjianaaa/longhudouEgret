@@ -4,7 +4,7 @@ class HistorySkinUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/HistorySkin.exml";
+        this.skinName = "resource/eui_skins/diySkin/HistorySkin.exml";
     }
     public trend:eui.Image;
     public record:eui.Image;

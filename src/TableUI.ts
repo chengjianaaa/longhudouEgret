@@ -6,7 +6,7 @@ class TableUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/BetTable.exml";
+        this.skinName = "resource/eui_skins/diySkin/BetTable.exml";
     }
 
     protected childrenCreated(): void {
@@ -14,23 +14,23 @@ class TableUI extends eui.Component {
         this.operation();
     }
 
-    public table:eui.Image;
-    public ratioHe1:eui.Label;
-    public ratioLong:eui.Label;
-    public ratioHu:eui.Label;
-    public betCoin:eui.Label;
-    public alarmGroup:eui.Group;
-    public time:eui.Label;
-    public readyTimeLabel:eui.Label;
-    public timeNotice:eui.Label;
+    public table: eui.Image;
+    public ratioHe1: eui.Label;
+    public ratioLong: eui.Label;
+    public ratioHu: eui.Label;
+    public betCoin: eui.Label;
+    public alarmGroup: eui.Group;
+    public time: eui.Label;
+    public readyTimeLabel: eui.Label;
+    public timeNotice: eui.Label;
     public notice1Group: eui.Group;// 龙点击下注
-    public notice1:eui.Image;
-    public longRes:eui.Image;// 龙牌
-    public notice2Group:eui.Group;// 和点击下注
-    public notice2:eui.Image;
-    public notice3Group:eui.Group;// 虎点击下注
-    public notice3:eui.Image;
-    public huRes:eui.Image;  // 虎牌
+    public notice1: eui.Image;
+    public longRes: eui.Image;// 龙牌
+    public notice2Group: eui.Group;// 和点击下注
+    public notice2: eui.Image;
+    public notice3Group: eui.Group;// 虎点击下注
+    public notice3: eui.Image;
+    public huRes: eui.Image;  // 虎牌
 
     private timer: Object; // 定时器
     private serverTime: any; // 服务器时间
@@ -54,7 +54,7 @@ class TableUI extends eui.Component {
         this.getTime();
         this.watchBet();
         this.betTips.play();
-        this.timer = setInterval(this.timerBegin.bind(this), 1000);
+        // this.timer = setInterval(this.timerBegin.bind(this), 1000);
     }
 
     /**
@@ -130,9 +130,10 @@ class TableUI extends eui.Component {
         let weiCoin = $Web3.utils.toWei($BetCoinChoose, 'ether');
         $loading.visible = true;
         $loading.label.text = "正在下注···";
-        this.unlockAccount().then((bool, err) => {
+        this.betAnimation();
+        this.unlockAccount().then((bool) => {
             if (bool) {
-                $ContractInstance.methods.sendBetInfo($MyAddress, choose, parseInt(Math.random() * (10 ** 12)), weiCoin)
+                $ContractInstance.methods.sendBetInfo($MyAddress, choose, Math.floor(Math.random() * (10 ** 12)), weiCoin)
                     .send({
                         from: $MyAddress,
                         value: weiCoin,
@@ -145,7 +146,6 @@ class TableUI extends eui.Component {
                         $Alert.visible = true;
                     })
                     .on('receipt', (receipt) => {
-                        $loading.visible = false;
                         try {
                             let request = new egret.HttpRequest();
                             request.responseType = egret.HttpResponseType.TEXT;
@@ -165,8 +165,10 @@ class TableUI extends eui.Component {
                             request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => {
                                 $Alert.visible = true;
                                 $Alert.label.text = '上传交易记录失败！';
+                                $loading.visible = false;
                             }, this);
                         } catch (error) {
+                            $loading.visible = false;
                             $Alert.visible = true;
                             $Alert.label.text = String(error);
                         }
@@ -246,7 +248,6 @@ class TableUI extends eui.Component {
         let time = Number(request.response);
         this.serverTime = time < 0 ? 0 : time;
         this.time.text = this.serverTime + "S";
-        // this.timer = setInterval(this.timerBegin.bind(this), 1000)
     }
 
     /**
@@ -271,15 +272,17 @@ class TableUI extends eui.Component {
         }
         if (this.serverTime > 1) {
             this.serverTime--;
+            this.longRes.source = "resource/assets/longhudou/poker/poker_back.png";
+            this.huRes.source = "resource/assets/longhudou/poker/poker_back.png";
             this.time.text = this.serverTime + "S";
-            if(this.serverTime % 5 == 0){
+            if (this.serverTime % 5 == 0) {
                 this.getTime();
             }
         }
         if (this.readyTime > 0) {
             this.readyTime--;
             this.readyTimeLabel.text = this.readyTime + "S";
-            if(this.readyTime == 0){
+            if (this.readyTime == 0) {
                 this.readyTimeLabel.visible = false;
                 this.time.visible = true;
                 this.timeNotice.text = "下注时间";
@@ -349,16 +352,16 @@ class TableUI extends eui.Component {
 
                 egret.Tween.get(this.longRes)
                     .to({scaleX: -1}, 0)
-                    .to({scaleX: 0}, 700).call(() => {
+                    .to({scaleX: 0}, 500).call(() => {
                     this.longRes.source = "resource/assets/longhudou/poker/" + dragonNum + '_' + figure + '.png';
                 })
-                    .to({scaleX: 1}, 700);
+                    .to({scaleX: 1}, 500);
                 egret.Tween.get(this.huRes)
                     .to({scaleX: -1}, 0)
-                    .to({scaleX: 0}, 700).call(() => {
+                    .to({scaleX: 0}, 500).call(() => {
                     this.huRes.source = "resource/assets/longhudou/poker/" + tigerNum + '_' + figure + '.png';
                 })
-                    .to({scaleX: 1}, 700);
+                    .to({scaleX: 1}, 500);
 
                 this.myBet = this.myBet.map((i) => {
                     return Number(i);
@@ -392,17 +395,17 @@ class TableUI extends eui.Component {
                     $InfoPanal.visible = false;
 
                     egret.Tween.get(this.longRes)
-                        .to({scaleX: -1}, 0)
-                        .to({scaleX: 0}, 700).call(() => {
+                        .to({scaleX: 1}, 0)
+                        .to({scaleX: 0}, 500).call(() => {
                         this.longRes.source = "resource/assets/longhudou/poker/poker_back.png";
                     })
-                        .to({scaleX: 1}, 700);
+                        .to({scaleX: -1}, 500);
                     egret.Tween.get(this.huRes)
-                        .to({scaleX: -1}, 0)
-                        .to({scaleX: 0}, 700).call(() => {
+                        .to({scaleX: 1}, 0)
+                        .to({scaleX: 0}, 500).call(() => {
                         this.huRes.source = "resource/assets/longhudou/poker/poker_back.png";
                     })
-                        .to({scaleX: 1}, 700);
+                        .to({scaleX: -1}, 500);
 
                     this.readyTime = 11;
                     this.readyTimeLabel.visible = true;
@@ -460,5 +463,126 @@ class TableUI extends eui.Component {
                 reject(false)
             }, this);
         })
+    }
+
+    /**
+     * 下注动画
+     */
+    private betAnimation() {
+        this.getLittleCoins(49, (arr) => {
+            arr.forEach((item, value) => {
+                for (let i = 0; i < item; i++) {
+                    switch (value) {
+                        case 0:
+                            this.makeCoins("10000");
+                            break;
+                        case 1:
+                            this.makeCoins("1000");
+                            break;
+                        case 2:
+                            this.makeCoins("500");
+                            break;
+                        case 3:
+                            this.makeCoins("100");
+                            break;
+                        case 4:
+                            this.makeCoins("50");
+                            break;
+                        case 5:
+                            this.makeCoins("10");
+                            break;
+                        case 6:
+                            this.makeCoins("5");
+                            break;
+                        case 7:
+                            this.makeCoins("1");
+                            break;
+                    }
+                }
+            })
+        });
+    }
+
+    /**
+     * 生成币
+     * 第一个币：270 780
+     * 第二个币：545 780
+     * 第三个币：845 780
+     * 第四个币：1125 780
+     * 终点龙  250,280  400,280  250,380  400,380   150*100
+     * 终点和  635,280  775,280  635,380  775,380
+     * 终点虎  1005,280  1155,280  1005,380  1155,380
+     */
+    private makeCoins(text) {
+        let initialPlaceX = 270;
+        let initialPlaceY = 780;
+        let endPlaceX = 0;
+        let endPlaceY = 0;
+        switch (this.currentChoose){
+            case "0":
+                endPlaceX = 250;
+                endPlaceY = 280;
+                break;
+            case "2":
+                endPlaceX = 635;
+                endPlaceY = 280;
+                break;
+            case "1":
+                endPlaceX = 1005;
+                endPlaceY = 280;
+                break;
+        }
+        let coin = new eui.Image();
+        coin.source = 'resource/assets/longhudou/chips_small.png';
+        coin.width = 88;
+        coin.height = 88;
+        coin.x = initialPlaceX;
+        coin.y = initialPlaceY;
+        coin.name = "smallCoin";
+        this.addChild(coin);
+        let label = new eui.Label();
+        label.text = text;
+        label.x = initialPlaceX;
+        label.y = initialPlaceY;
+        this.addChild(label);
+        let xRan = Math.floor(Math.random() * 150);
+        let yRan = Math.floor(Math.random() * 100);
+        egret.Tween.get(coin)
+            .to({x: initialPlaceX, y: initialPlaceY}, 0)
+            .to({x: endPlaceX + xRan, y: endPlaceY + yRan}, 1000).call(() => {
+        });
+        egret.Tween.get(label)
+            .to({x: initialPlaceX, y: initialPlaceY}, 0)
+            .to({x: endPlaceX + xRan, y: endPlaceY + yRan}, 1000).call(() => {
+        });
+    }
+
+    /**
+     * 移除元素
+     */
+    private removeSmallCoin() {
+        this.$children.forEach((item)=>{
+            if(item.name == "smallCoin"){
+                this.removeChild(item)
+            }
+        });
+    }
+
+    /**
+     * 将下注金额分拆成基础币
+     * @param coin
+     * @param callback
+     */
+    private getLittleCoins(coin, callback) {
+        let wan = Math.floor(coin / 10000);
+        let qian = Math.floor((coin % 10000) / 1000);
+        let wuBai = Math.floor((coin % 1000) / 500);
+        let bai = Math.floor((coin % 500) / 100);
+        let wuShi = Math.floor((coin % 100) / 50);
+        let shi = Math.floor((coin % 50) / 10);
+        let wu = Math.floor((coin % 10) / 5);
+        let one = coin % 5;
+        let arr = [wan, qian, wuBai, bai, wuShi, shi, wu, one];
+        callback(arr);
     }
 }

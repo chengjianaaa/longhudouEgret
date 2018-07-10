@@ -13,7 +13,7 @@ var BalanceUI = (function (_super) {
     function BalanceUI() {
         var _this = _super.call(this) || this;
         /**加载皮肤 */
-        _this.skinName = "resource/eui_skins/Balance.exml";
+        _this.skinName = "resource/eui_skins/diySkin/Balance.exml";
         return _this;
     }
     BalanceUI.prototype.childrenCreated = function () {

@@ -13,7 +13,7 @@ var CroupierUI = (function (_super) {
     function CroupierUI() {
         var _this = _super.call(this) || this;
         /**加载皮肤 */
-        _this.skinName = "resource/eui_skins/Croupier.exml";
+        _this.skinName = "resource/eui_skins/diySkin/Croupier.exml";
         return _this;
     }
     CroupierUI.prototype.childrenCreated = function () {

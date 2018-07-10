@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="AlertSkin" width="1080" height="1716" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Rect width="1080" height="1716" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" fillAlpha="0.7" fillColor="0x000000"/>
+<e:Skin class="AlertSkin" width="1716" height="1080" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect anchorOffsetX="0" anchorOffsetY="0" fillAlpha="0.7" fillColor="0x000000" left="0" right="0" top="0" bottom="0"/>
 	<e:Image source="small_popup_png" horizontalCenter="0" verticalCenter="0"/>
-	<e:Image id="btn" source="btn_sure_png" horizontalCenter="-76" verticalCenter="0.5"/>
-	<e:Label id="label" text="你还未登陆钱包，请先登陆！" anchorOffsetX="0" anchorOffsetY="0" rotation="89.95" left="595" right="435" width="500" verticalAlign="middle" textAlign="center" verticalCenter="0" height="80" fontFamily="SourceHanSansCN-Regular" size="34" textColor="0x9f7f74"/>
+	<e:Image id="btn" source="btn_sure_png" horizontalCenter="0.5" verticalCenter="85"/>
+	<e:Label id="label" text="你还未登陆钱包，请先登陆！" anchorOffsetX="0" anchorOffsetY="0" rotation="0" width="500" verticalAlign="middle" textAlign="center" verticalCenter="-82" height="80" fontFamily="SourceHanSansCN-Regular" size="34" textColor="0x9f7f74" horizontalCenter="0"/>
 </e:Skin>

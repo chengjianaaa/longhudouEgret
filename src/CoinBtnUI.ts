@@ -4,7 +4,7 @@ class CoinBtnUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/CoinBtn.exml";
+        this.skinName = "resource/eui_skins/diySkin/CoinBtn.exml";
     }
 
     protected childrenCreated(): void {

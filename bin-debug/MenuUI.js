@@ -13,7 +13,7 @@ var MenuUI = (function (_super) {
     function MenuUI() {
         var _this = _super.call(this) || this;
         /**加载皮肤 */
-        _this.skinName = "resource/eui_skins/Menu.exml";
+        _this.skinName = "resource/eui_skins/diySkin/Menu.exml";
         return _this;
     }
     MenuUI.prototype.childrenCreated = function () {

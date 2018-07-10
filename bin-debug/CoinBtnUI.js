@@ -13,7 +13,7 @@ var CoinBtnUI = (function (_super) {
     function CoinBtnUI() {
         var _this = _super.call(this) || this;
         /**加载皮肤 */
-        _this.skinName = "resource/eui_skins/CoinBtn.exml";
+        _this.skinName = "resource/eui_skins/diySkin/CoinBtn.exml";
         return _this;
     }
     CoinBtnUI.prototype.childrenCreated = function () {

@@ -1,7 +1,3 @@
-declare class Balance extends eui.Skin{
-}
-declare class BetTable extends eui.Skin{
-}
 declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
@@ -9,14 +5,6 @@ declare module skins{
 declare module skins{
 	class CheckBoxSkin extends eui.Skin{
 	}
-}
-declare class CoinBtn extends eui.Skin{
-}
-declare class CoinNumber extends eui.Skin{
-}
-declare class Croupier extends eui.Skin{
-}
-declare class HistorySkin extends eui.Skin{
 }
 declare module skins{
 	class HScrollBarSkin extends eui.Skin{
@@ -29,8 +17,6 @@ declare module skins{
 declare module skins{
 	class ItemRendererSkin extends eui.Skin{
 	}
-}
-declare class Menu extends eui.Skin{
 }
 declare class NewFile extends eui.Skin{
 }
@@ -65,6 +51,18 @@ declare module skins{
 declare module skins{
 	class VSliderSkin extends eui.Skin{
 	}
+}
+declare class Balance extends eui.Skin{
+}
+declare class BetTable extends eui.Skin{
+}
+declare class CoinBtn extends eui.Skin{
+}
+declare class Croupier extends eui.Skin{
+}
+declare class HistorySkin extends eui.Skin{
+}
+declare class Menu extends eui.Skin{
 }
 declare class AlertSkin extends eui.Skin{
 }

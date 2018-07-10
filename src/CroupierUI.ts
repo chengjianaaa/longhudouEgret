@@ -4,7 +4,7 @@ class CroupierUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/Croupier.exml";
+        this.skinName = "resource/eui_skins/diySkin/Croupier.exml";
     }
 
     protected childrenCreated(): void {

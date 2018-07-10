@@ -68,12 +68,11 @@ var InfoPanalUI = (function (_super) {
                 image.y = y + 52;
                 image.anchorOffsetX = 52;
                 image.anchorOffsetY = 52;
-                image.skewY = 180;
                 _this.hisScrollerG.addChild(image);
-                y += 140;
+                x += 145;
                 if (i % 8 == 0) {
-                    x += 130;
-                    y = 0;
+                    y += 130;
+                    x = 0;
                 }
             }
             _this.totalLongBet.text = String(long);
@@ -86,10 +85,10 @@ var InfoPanalUI = (function (_super) {
      */
     InfoPanalUI.prototype.getBetRecord = function () {
         for (var i = 0; i < $BetRecord.length; i++) {
-            this.getImg($BetRecord[i].betChoose, i, 130);
+            this.getImg($BetRecord[i].betChoose, i, 140);
             this.getLabel($BetRecord[i].betCoins, i, 430);
-            this.getLabel($BetRecord[i].winCoin, i, 700);
-            this.getImg($BetRecord[i].result, i, 940);
+            this.getLabel($BetRecord[i].winCoin, i, 720);
+            this.getImg($BetRecord[i].result, i, 970);
         }
     };
     /**
@@ -125,9 +124,8 @@ var InfoPanalUI = (function (_super) {
         image.source = this.getImgUrl(choose);
         image.anchorOffsetX = 52;
         image.anchorOffsetY = 52;
-        image.skewY = 180;
-        image.x = 150 + i * 120;
-        image.y = offset;
+        image.x = offset;
+        image.y = 150 + i * 120;
         this.recordG.addChild(image);
     };
     InfoPanalUI.prototype.getLabel = function (choose, i, offset) {
@@ -137,12 +135,10 @@ var InfoPanalUI = (function (_super) {
         label.height = 30;
         label.anchorOffsetX = 65;
         label.anchorOffsetY = 15;
-        label.skewY = 180;
-        label.rotation = -90;
         label.textColor = '#8d7257';
         this.recordG.addChild(label);
-        label.x = 150 + i * 120;
-        label.y = offset;
+        label.x = offset;
+        label.y = 150 + i * 120;
     };
     return InfoPanalUI;
 }(eui.Component));

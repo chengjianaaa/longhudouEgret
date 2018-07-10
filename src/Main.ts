@@ -117,6 +117,20 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
+        let stageW = this.stage.stageWidth;
+        let stageH = this.stage.stageHeight;
+
+        /**
+         * 下注的4个icon
+         * @type {HistorySkinUI}
+         */
+        let coinBtn = new CoinBtnUI();
+        this.addChild(coinBtn);
+        let coinBtnH = coinBtn.height;
+        let coinBtnW = coinBtn.width;
+        coinBtn.x = (stageW - coinBtnW) / 2;
+        coinBtn.y = 870;
+
         /**
          * 加载桌面
          * @type {egret.Bitmap}
@@ -125,10 +139,8 @@ class Main extends eui.UILayer {
         this.addChild(table);
         let tableW = table.width;
         let tableH = table.height;
-        let stageW = this.stage.stageWidth;
-        let stageH = this.stage.stageHeight;
         table.y = (stageH - tableH) / 2;
-        table.x = 165;
+        table.x = (stageW - tableW) / 2;
 
         /**
          * 美女荷官
@@ -138,8 +150,8 @@ class Main extends eui.UILayer {
         this.addChild(croupier);
         let croupierW = croupier.width;
         let croupierH = croupier.height;
-        croupier.x = stageW - croupierW;
-        croupier.y = (stageH - croupierH) / 2;
+        croupier.x = (stageW - croupierW) / 2;
+        croupier.y = 10;
 
         /**
          * 右上角的合约余额和账户余额
@@ -150,24 +162,16 @@ class Main extends eui.UILayer {
         let balanceW = $balance.width;
         let balanceH = $balance.height;
         $balance.x = stageW - balanceW;
-        $balance.y = stageH - balanceH;
-        /**
-         * 下注的4个icon
-         * @type {HistorySkinUI}
-         */
-        let coinBtn = new CoinBtnUI();
-        this.addChild(coinBtn);
-        let coinBtnH = coinBtn.height;
-        coinBtn.y = (stageH - coinBtnH) / 2;
+        $balance.y = 10;
+
         /**
          * 左上角的菜单
          * @type {HistorySkinUI}
          */
         let menu = new MenuUI();
         this.addChild(menu);
-        let menuW = menu.width;
-        menu.x = stageW - menuW;
-        menu.y = 25;
+        menu.x = 20;
+        menu.y = 10;
 
         /**
          * 右下角的两个icon，历史记录
@@ -178,6 +182,7 @@ class Main extends eui.UILayer {
         let historyW = history.width;
         let historyH = history.height;
         history.y = stageH - historyH;
+        history.x = stageW - historyW;
         /**
          * alert模态框
          * @type {AlertUI}

@@ -13,7 +13,7 @@ var HistorySkinUI = (function (_super) {
     function HistorySkinUI() {
         var _this = _super.call(this) || this;
         /**加载皮肤 */
-        _this.skinName = "resource/eui_skins/HistorySkin.exml";
+        _this.skinName = "resource/eui_skins/diySkin/HistorySkin.exml";
         return _this;
     }
     HistorySkinUI.prototype.childrenCreated = function () {

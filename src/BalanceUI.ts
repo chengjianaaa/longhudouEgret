@@ -3,7 +3,7 @@ class BalanceUI extends eui.Component {
         super();
 
         /**加载皮肤 */
-        this.skinName = "resource/eui_skins/Balance.exml";
+        this.skinName = "resource/eui_skins/diySkin/Balance.exml";
     }
 
     protected childrenCreated(): void {

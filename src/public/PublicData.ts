@@ -4,7 +4,7 @@ const $uploadKeyStoreUrl: string = 'http://39.104.81.103:8551'; // 上传keystor
 const $uploadTxUrl: string = "http://39.104.81.103/api/addTx.php"; // 上传交易记录
 const $MyAddress: string = "0xA5B725E03Ad76Ad9be88CBb3207D5a306C58600f";    //账户地址
 const $privateKey: string = "0x873f8691f035c7217f2082ed999bbd9ef1b124b7c9be2dfe239a95c3eb1a6be0";
-const $ContractAddress: string = "0x17287737509341a83C7B889256E7f53e1416f1c5";   //合约地址
+const $ContractAddress: string = "0x71084c191e8B25D8EF6Ca922C9e8D295886CCd3D";   //合约地址
 
 let $ContractInfo: Object;//合约信息
 let $ContractInstance: Object;//合约实例

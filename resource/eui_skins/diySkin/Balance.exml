@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="Balance" width="634.67" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" height="114.67">
+	<w:Config id="1645b028e61"/>
+	<e:Image source="jc_fof_bg_png" x="43.5" verticalCenter="0.16499999999999915"/>
+	<e:Image source="jc_png" x="1.4" verticalCenter="0.16499999999999915"/>
+	<e:Image source="jc_fof_bg_png" x="368.99" verticalCenter="0"/>
+	<e:Image source="fof_png" x="326.34" verticalCenter="0"/>
+	<e:Label id="balancePool" rotation="0" anchorOffsetX="0" anchorOffsetY="0" height="32.78" left="101" right="385.66999999999996" verticalAlign="middle" text="0" x="59" scaleX="1" scaleY="1" width="180" textColor="0xcf958f" verticalCenter="0.16499999999999915"/>
+	<e:Label id="myBalance" text="0" rotation="0" anchorOffsetX="0" anchorOffsetY="0" height="26.11" left="430" right="63.66999999999996" x="57" scaleX="1" scaleY="1" width="180" textColor="0xcf958f" verticalCenter="-0.33500000000000085" verticalAlign="middle" textAlign="left"/>
+</e:Skin>

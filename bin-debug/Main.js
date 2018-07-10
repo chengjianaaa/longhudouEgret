@@ -174,6 +174,18 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        var stageW = this.stage.stageWidth;
+        var stageH = this.stage.stageHeight;
+        /**
+         * 下注的4个icon
+         * @type {HistorySkinUI}
+         */
+        var coinBtn = new CoinBtnUI();
+        this.addChild(coinBtn);
+        var coinBtnH = coinBtn.height;
+        var coinBtnW = coinBtn.width;
+        coinBtn.x = (stageW - coinBtnW) / 2;
+        coinBtn.y = 870;
         /**
          * 加载桌面
          * @type {egret.Bitmap}
@@ -182,10 +194,8 @@ var Main = (function (_super) {
         this.addChild(table);
         var tableW = table.width;
         var tableH = table.height;
-        var stageW = this.stage.stageWidth;
-        var stageH = this.stage.stageHeight;
         table.y = (stageH - tableH) / 2;
-        table.x = 165;
+        table.x = (stageW - tableW) / 2;
         /**
          * 美女荷官
          * @type {HistorySkinUI}
@@ -194,8 +204,8 @@ var Main = (function (_super) {
         this.addChild(croupier);
         var croupierW = croupier.width;
         var croupierH = croupier.height;
-        croupier.x = stageW - croupierW;
-        croupier.y = (stageH - croupierH) / 2;
+        croupier.x = (stageW - croupierW) / 2;
+        croupier.y = 10;
         /**
          * 右上角的合约余额和账户余额
          * @type {HistorySkinUI}
@@ -205,24 +215,15 @@ var Main = (function (_super) {
         var balanceW = $balance.width;
         var balanceH = $balance.height;
         $balance.x = stageW - balanceW;
-        $balance.y = stageH - balanceH;
-        /**
-         * 下注的4个icon
-         * @type {HistorySkinUI}
-         */
-        var coinBtn = new CoinBtnUI();
-        this.addChild(coinBtn);
-        var coinBtnH = coinBtn.height;
-        coinBtn.y = (stageH - coinBtnH) / 2;
+        $balance.y = 10;
         /**
          * 左上角的菜单
          * @type {HistorySkinUI}
          */
         var menu = new MenuUI();
         this.addChild(menu);
-        var menuW = menu.width;
-        menu.x = stageW - menuW;
-        menu.y = 25;
+        menu.x = 20;
+        menu.y = 10;
         /**
          * 右下角的两个icon，历史记录
          * @type {HistorySkinUI}
@@ -232,6 +233,7 @@ var Main = (function (_super) {
         var historyW = history.width;
         var historyH = history.height;
         history.y = stageH - historyH;
+        history.x = stageW - historyW;
         /**
          * alert模态框
          * @type {AlertUI}

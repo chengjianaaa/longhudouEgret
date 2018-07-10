@@ -86,12 +86,11 @@ class InfoPanalUI extends eui.Component {
                 image.y = y + 52;
                 image.anchorOffsetX = 52;
                 image.anchorOffsetY = 52;
-                image.skewY = 180;
                 this.hisScrollerG.addChild(image);
-                y += 140;
+                x += 145;
                 if (i % 8 == 0) {
-                    x += 130;
-                    y = 0;
+                    y += 130;
+                    x = 0;
                 }
             }
             this.totalLongBet.text = String(long);
@@ -105,10 +104,10 @@ class InfoPanalUI extends eui.Component {
      */
     private getBetRecord() {
         for (let i = 0; i < $BetRecord.length; i++) {
-            this.getImg($BetRecord[i].betChoose, i, 130);
+            this.getImg($BetRecord[i].betChoose, i, 140);
             this.getLabel($BetRecord[i].betCoins, i, 430);
-            this.getLabel($BetRecord[i].winCoin, i, 700);
-            this.getImg($BetRecord[i].result, i, 940);
+            this.getLabel($BetRecord[i].winCoin, i, 720);
+            this.getImg($BetRecord[i].result, i, 970);
         }
     }
 
@@ -146,9 +145,8 @@ class InfoPanalUI extends eui.Component {
         image.source = this.getImgUrl(choose);
         image.anchorOffsetX = 52;
         image.anchorOffsetY = 52;
-        image.skewY = 180;
-        image.x = 150 + i * 120;
-        image.y = offset;
+        image.x = offset;
+        image.y = 150 + i * 120;
         this.recordG.addChild(image);
     }
 
@@ -159,11 +157,9 @@ class InfoPanalUI extends eui.Component {
         label.height = 30;
         label.anchorOffsetX = 65;
         label.anchorOffsetY = 15;
-        label.skewY = 180;
-        label.rotation = -90;
         label.textColor = '#8d7257';
         this.recordG.addChild(label);
-        label.x = 150 + i * 120;
-        label.y = offset;
+        label.x = offset;
+        label.y = 150 + i * 120;
     }
 }
