@@ -1,5 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="CoinBtn" width="1054" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" height="205">
+<e:Skin class="CoinBtn" width="1054" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*" height="205">
+	<w:Declarations>
+		<tween:TweenGroup id="coinEffect1">
+			<tween:TweenItem target="{coin1Xz}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="coinEffect2">
+			<tween:TweenItem target="{coin2Xz}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="coinEffect3">
+			<tween:TweenItem target="{coin3Xz}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="coinEffect4">
+			<tween:TweenItem target="{coin4Xz}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
 	<e:Image id="coin1" source="chip1_png" x="0" verticalCenter="0"/>
 	<e:Image id="coin2" source="chip2_png" x="271.31" verticalCenter="0"/>
 	<e:Image id="coin3" source="chip3_png" x="572.54" verticalCenter="0"/>
@@ -8,8 +86,8 @@
 	<e:Label id="label2" text="0" x="284.61" anchorOffsetX="0" width="172.02" anchorOffsetY="0" height="181.38" rotation="0" verticalAlign="middle" textAlign="center" fontFamily="Bastion" textColor="0x5f76b4" size="69" bold="true" border="false" name="label2" verticalCenter="-3"/>
 	<e:Label id="label3" text="0" x="585.53" anchorOffsetX="0" width="172.02" anchorOffsetY="0" height="182.38" rotation="0" verticalAlign="middle" textAlign="center" fontFamily="Bastion" textColor="0xa988c2" size="69" bold="true" border="false" name="label3" verticalCenter="0"/>
 	<e:Label id="label4" text="0" x="867.99" anchorOffsetX="0" width="173.02" anchorOffsetY="0" height="181.39" rotation="0" verticalAlign="middle" textAlign="center" fontFamily="Bastion" textColor="0xcb937a" size="69" bold="true" border="false" name="label4" verticalCenter="0"/>
-	<e:Image id="coin1Xz" source="chip1_xz_png" x="-13" anchorOffsetX="0" verticalCenter="-22.5" visible="false"/>
-	<e:Image id="coin2Xz" source="chip2_xz_png" y="-51.3" x="258.81" visible="false"/>
-	<e:Image id="coin3Xz" source="chip3_xz_png" x="557.71" y="-50.93" visible="false"/>
-	<e:Image id="coin4Xz" source="chip4_xz_png" x="840.67" y="-51.46" visible="false"/>
+	<e:Image id="coin1Xz" source="chip1_xz_png" x="-13" anchorOffsetX="0" verticalCenter="-22.5"/>
+	<e:Image id="coin2Xz" source="chip2_xz_png" y="-51.3" x="258.81"/>
+	<e:Image id="coin3Xz" source="chip3_xz_png" x="557.71" y="-50.93"/>
+	<e:Image id="coin4Xz" source="chip4_xz_png" x="840.67" y="-51.46"/>
 </e:Skin>

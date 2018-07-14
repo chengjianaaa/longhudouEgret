@@ -36,6 +36,7 @@
 		"resource/eui_skins/diySkin/Croupier.exml",
 		"resource/eui_skins/diySkin/HistorySkin.exml",
 		"resource/eui_skins/diySkin/Menu.exml",
+		"resource/eui_skins/diySkin/NewFile.exml",
 		"resource/eui_skins/modal/AlertSkin.exml",
 		"resource/eui_skins/modal/InfoPanal.exml",
 		"resource/eui_skins/modal/Loading.exml"

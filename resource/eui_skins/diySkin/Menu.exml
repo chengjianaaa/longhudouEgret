@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="Menu" width="496" height="117" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
 	<e:Image id="home" source="icon_home_png" x="0" verticalCenter="0"/>
-	<e:Image id="wallet" source="icon_wallet_png" x="134" verticalCenter="-3.5"/>
-	<e:Image id="help" source="icon_help_png" x="272" verticalCenter="0"/>
-	<e:Image id="share" source="icon_share_png" x="408" verticalCenter="0"/>
+	<e:Image id="help" source="icon_help_png" x="134" verticalCenter="1"/>
 </e:Skin>

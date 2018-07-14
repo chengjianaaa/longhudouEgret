@@ -90,6 +90,8 @@ var InfoPanalUI = (function (_super) {
             this.getLabel($BetRecord[i].winCoin, i, 720);
             this.getImg($BetRecord[i].result, i, 970);
         }
+        this.betCoin.text = egret.localStorage.getItem("chipCoinsAll");
+        this.resCoin.text = egret.localStorage.getItem("balanceCoisaAll");
     };
     /**
      * 得到图片地址

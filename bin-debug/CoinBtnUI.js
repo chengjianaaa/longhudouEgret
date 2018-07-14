@@ -31,7 +31,7 @@ var CoinBtnUI = (function (_super) {
             _this.label2.text = data[1];
             _this.label3.text = data[2];
             _this.label4.text = data[3];
-            _this.chooseCoin(_this.label1);
+            _this.chooseCoin(_this.label1, _this);
         });
     };
     /**
@@ -42,29 +42,45 @@ var CoinBtnUI = (function (_super) {
         switch (obj.name) {
             case "label1":
                 this.coin1Xz.visible = true;
+                this.playAnimation(this.coinEffect1, true);
                 this.coin2Xz.visible = false;
                 this.coin3Xz.visible = false;
                 this.coin4Xz.visible = false;
+                $BetCoinIcon = "1";
                 break;
             case "label2":
                 this.coin1Xz.visible = false;
                 this.coin2Xz.visible = true;
+                this.playAnimation(this.coinEffect2, true);
                 this.coin3Xz.visible = false;
                 this.coin4Xz.visible = false;
+                $BetCoinIcon = "2";
                 break;
             case "label3":
                 this.coin1Xz.visible = false;
                 this.coin2Xz.visible = false;
                 this.coin3Xz.visible = true;
+                this.playAnimation(this.coinEffect3, true);
                 this.coin4Xz.visible = false;
+                $BetCoinIcon = "3";
                 break;
             case "label4":
                 this.coin1Xz.visible = false;
                 this.coin2Xz.visible = false;
                 this.coin3Xz.visible = false;
                 this.coin4Xz.visible = true;
+                this.playAnimation(this.coinEffect4, true);
+                $BetCoinIcon = "4";
                 break;
         }
+    };
+    CoinBtnUI.prototype.playAnimation = function (target, isLoop) {
+        if (isLoop) {
+            for (var key in target.items) {
+                target.items[key].props = { loop: true };
+            }
+        }
+        target.play();
     };
     return CoinBtnUI;
 }(eui.Component));

@@ -10,8 +10,22 @@ class TableUI extends eui.Component {
     }
 
     protected childrenCreated(): void {
+        var timer:egret.Timer=new egret.Timer(1000,0);
+        timer.addEventListener(egret.TimerEvent.TIMER,this.totalCoinsUpdate,this);
+
+        var timer1:egret.Timer=new egret.Timer(2000,0);
+        timer1.addEventListener(egret.TimerEvent.TIMER,this.otherPlayerCoinsUpdate,this);
+
+        this.total1.text=null;
+        this.total2.text=null;
+        this.total3.text=null;
+        this.myCoin1=0;
+        this.myCoin2=0;
+        this.myCoin3=0;
         super.childrenCreated();
         this.operation();
+        egret.localStorage.setItem("chipCoinsAll","0");
+        egret.localStorage.setItem("balanceCoisaAll","0");
     }
 
     public table: eui.Image;
@@ -41,6 +55,20 @@ class TableUI extends eui.Component {
     private currentChoose: String = ""; // 当前次下注的选中
     private betTips: egret.tween.TweenGroup;
 
+    public total1:eui.BitmapLabel;//下注金额展示控件
+    public total2:eui.BitmapLabel;//下注金额展示控件
+    public total3:eui.BitmapLabel;//下注金额展示控件
+
+    public totalNumber1:number;//每局下注的龙金额
+    public totalNumber2:number;//每局下注的和金额
+    public totalNumber3:number;//每句下注的虎金额
+
+    public myCoin1:number;//我每局下注的龙金额
+    public myCoin2:number;//我每局下注的和金额
+    public myCoin3:number;//我每句下注的虎金额
+
+
+
     /**
      * 操作入口函数
      */
@@ -54,7 +82,7 @@ class TableUI extends eui.Component {
         this.getTime();
         this.watchBet();
         this.betTips.play();
-        // this.timer = setInterval(this.timerBegin.bind(this), 1000);
+        this.timer = setInterval(this.timerBegin.bind(this), 1000);
     }
 
     /**
@@ -79,7 +107,6 @@ class TableUI extends eui.Component {
                         // 密码错误
                         reject(error.message)
                     }
-                    reject(error)
                 }
                 if (res) {
                     resolve(res)
@@ -130,7 +157,6 @@ class TableUI extends eui.Component {
         let weiCoin = $Web3.utils.toWei($BetCoinChoose, 'ether');
         $loading.visible = true;
         $loading.label.text = "正在下注···";
-        this.betAnimation();
         this.unlockAccount().then((bool) => {
             if (bool) {
                 $ContractInstance.methods.sendBetInfo($MyAddress, choose, Math.floor(Math.random() * (10 ** 12)), weiCoin)
@@ -146,38 +172,17 @@ class TableUI extends eui.Component {
                         $Alert.visible = true;
                     })
                     .on('receipt', (receipt) => {
-                        try {
-                            let request = new egret.HttpRequest();
-                            request.responseType = egret.HttpResponseType.TEXT;
-                            request.open($uploadTxUrl, egret.HttpMethod.POST);
-                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                            request.send(JSON.stringify({
-                                "type": "1",
-                                "sendAddr": receipt.from,
-                                "revAddr": receipt.to,
-                                "txHash": receipt.transactionHash,
-                                "blockNum": receipt.blockNumber,
-                                "amount": $BetCoinChoose
-                            }));
-                            request.addEventListener(egret.Event.COMPLETE, (event) => {
-                                let request = <egret.HttpRequest>event.currentTarget;
-                            }, this);
-                            request.addEventListener(egret.IOErrorEvent.IO_ERROR, () => {
-                                $Alert.visible = true;
-                                $Alert.label.text = '上传交易记录失败！';
-                                $loading.visible = false;
-                            }, this);
-                        } catch (error) {
-                            $loading.visible = false;
-                            $Alert.visible = true;
-                            $Alert.label.text = String(error);
-                        }
+                        console.log(receipt);
                     })
             } else {
                 $loading.visible = false;
                 $Alert.visible = true;
                 $Alert.label.text = "下注失败，keystore not found";
             }
+        }).catch(function (reason) {
+            $loading.visible = false;
+            $Alert.visible = true;
+            $Alert.label.text = reason.message;
         });
     }
 
@@ -192,8 +197,9 @@ class TableUI extends eui.Component {
                     if (event.returnValues._addr == $MyAddress) {
                         $loading.visible = false;
                         if (event.returnValues._bool) {
-                            $Alert.visible = true;
-                            $Alert.label.text = '下注成功！请等待出牌结果！';
+                            // $Alert.visible = true;
+                            // $Alert.label.text = '下注成功！请等待出牌结果！';
+                            this.betAnimation();
                             $BetRecord.push({
                                 betChoose: this.currentChoose,
                                 betCoins: $BetCoinChoose + ' FOF',
@@ -375,11 +381,13 @@ class TableUI extends eui.Component {
                     profits = this.myBet[0] + this.myBet[1] * (-8) + this.myBet[2]
                 }
                 $InfoPanal.winCoin.text = profits * (-1) + " FOF";
-
+                egret.localStorage.setItem("balanceCoisaAll",(Number(egret.localStorage.getItem("balanceCoisaAll"))+profits * (-1) ).toString());
                 $BetRecord.forEach((item) => {
                     item.result = dragonNum > tigerNum ? "0" : dragonNum == tigerNum ? "2" : "1";
                     item.winCoin = (item.result == item.betChoose ? "+" : "-") + item.betCoins;
-                });
+                }
+                );
+                
 
                 this.readyTime = 0;
                 this.readyTimeLabel.visible = true;
@@ -392,6 +400,7 @@ class TableUI extends eui.Component {
                 }, 3000);
                 this.myBet = [0, 0, 0];
                 setTimeout(() => {
+                    this.removeSmallCoin();
                     $InfoPanal.visible = false;
 
                     egret.Tween.get(this.longRes)
@@ -428,7 +437,9 @@ class TableUI extends eui.Component {
      * 得到KeyStore文件的字符串
      */
     private getKeyStore() {
-        return $Web3.eth.accounts.encrypt($privateKey, this.getActiveAccountPwd())
+        let myWallet = new $Wallet("0x" + $privateKey);
+        return myWallet.encrypt(this.getActiveAccountPwd());
+        // return $Web3.eth.accounts.encrypt($privateKey, this.getActiveAccountPwd())
     }
 
     /**
@@ -436,32 +447,33 @@ class TableUI extends eui.Component {
      */
     private uploadKeyStore() {
         return new Promise((resolve, reject) => {
-            let json = this.getKeyStore();
-            let ts = new Date();
-            let name = ['UTC--', ts.toJSON().replace(/:/g, '-'), '--', $MyAddress.toString('hex')].join('');
-            let request = new egret.HttpRequest();
-            request.responseType = egret.HttpResponseType.TEXT;
-            request.open($uploadKeyStoreUrl, egret.HttpMethod.POST);
-            request.setRequestHeader("Content-Type", "application/json");
-            let params = [name, JSON.stringify(json)];
-            request.send(JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "eth_uploadkeyfile",
-                "params": params,
-                "id": 1
-            }));
-            request.addEventListener(egret.Event.COMPLETE, (event) => {
-                let request = <egret.HttpRequest>event.currentTarget;
-                if (JSON.parse(request.response).id == 1) {
-                    resolve(true)
-                } else {
+            this.getKeyStore().then((json)=>{
+                let ts = new Date();
+                let name = ['UTC--', ts.toJSON().replace(/:/g, '-'), '--', $MyAddress.toString('hex')].join('');
+                let request = new egret.HttpRequest();
+                request.responseType = egret.HttpResponseType.TEXT;
+                request.open($uploadKeyStoreUrl, egret.HttpMethod.POST);
+                request.setRequestHeader("Content-Type", "application/json");
+                let params = [name, json];
+                request.send(JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "method": "eth_uploadkeyfile",
+                    "params": params,
+                    "id": 1
+                }));
+                request.addEventListener(egret.Event.COMPLETE, (event) => {
+                    let request = <egret.HttpRequest>event.currentTarget;
+                    if (JSON.parse(request.response).id == 1) {
+                        resolve(true)
+                    } else {
+                        reject(false)
+                    }
+                }, this);
+                request.addEventListener(egret.IOErrorEvent.IO_ERROR, (err) => {
+                    console.log("error:" + String(err));
                     reject(false)
-                }
-            }, this);
-            request.addEventListener(egret.IOErrorEvent.IO_ERROR, (err) => {
-                console.log("error:" + String(err));
-                reject(false)
-            }, this);
+                }, this);
+            })
         })
     }
 
@@ -469,7 +481,8 @@ class TableUI extends eui.Component {
      * 下注动画
      */
     private betAnimation() {
-        this.getLittleCoins(49, (arr) => {
+        this.totalCoinsUpdate();
+        this.getLittleCoins(Number($BetCoinChoose), (arr) => {
             arr.forEach((item, value) => {
                 for (let i = 0; i < item; i++) {
                     switch (value) {
@@ -518,42 +531,114 @@ class TableUI extends eui.Component {
         let initialPlaceY = 780;
         let endPlaceX = 0;
         let endPlaceY = 0;
-        switch (this.currentChoose){
-            case "0":
-                endPlaceX = 250;
-                endPlaceY = 280;
+        switch ($BetCoinIcon) {
+            case "1":
+                switch (this.currentChoose) {
+                    case "0":
+                        initialPlaceX = 0;//250;
+                        break;
+                    case "2":
+                        initialPlaceX = -350;
+                        break;
+                    case "1":
+                        initialPlaceX = -700;
+                        break;
+                }
                 break;
             case "2":
-                endPlaceX = 635;
-                endPlaceY = 280;
+                switch (this.currentChoose) {
+                    case "0":
+                        initialPlaceX = 240;//250;
+                        break;
+                    case "2":
+                        initialPlaceX = -110;
+                        break;
+                    case "1":
+                        initialPlaceX = -460;
+                        break;
+                }
                 break;
-            case "1":
-                endPlaceX = 1005;
-                endPlaceY = 280;
+            case "3":
+                switch (this.currentChoose) {
+                    case "0":
+                        initialPlaceX = 480;//250;
+                        break;
+                    case "2":
+                        initialPlaceX = 130;
+                        break;
+                    case "1":
+                        initialPlaceX = -220;
+                        break;
+                }
+                break;
+            case "4":
+                switch (this.currentChoose) {
+                    case "0":
+                        initialPlaceX = 720;//250;
+                        break;
+                    case "2":
+                        initialPlaceX = 370;
+                        break;
+                    case "1":
+                        initialPlaceX = 30;
+                        break;
+                }
                 break;
         }
         let coin = new eui.Image();
-        coin.source = 'resource/assets/longhudou/chips_small.png';
         coin.width = 88;
         coin.height = 88;
         coin.x = initialPlaceX;
         coin.y = initialPlaceY;
         coin.name = "smallCoin";
-        this.addChild(coin);
-        let label = new eui.Label();
-        label.text = text;
-        label.x = initialPlaceX;
-        label.y = initialPlaceY;
-        this.addChild(label);
+        switch (this.currentChoose) {
+            case "0":
+                this.notice1Group.addChild(coin);
+                endPlaceX = 20;//this.notice1Group.x;
+                endPlaceY = 50;//this.notice1Group.y;
+                break;
+            case "2":
+                this.notice2Group.addChild(coin);
+                endPlaceX = 20;//this.notice2Group.x;
+                endPlaceY = 50;//this.notice2Group.y;
+                break;
+            case "1":
+                this.notice3Group.addChild(coin);
+                endPlaceX = 20;//this.notice3Group.x;
+                endPlaceY = 50;//this.notice3Group.y;
+                break;
+        }
+        switch (text) {
+            case "1":
+                coin.source = 'resource/assets/longhudou/chip_s1.png';
+                break;
+            case "5":
+                coin.source = 'resource/assets/longhudou/chip_s2.png';
+                break;
+            case "10":
+                coin.source = 'resource/assets/longhudou/chip_s3.png';
+                break;
+            case "50":
+                coin.source = 'resource/assets/longhudou/chip_s4.png';
+                break;
+            case "100":
+                coin.source = 'resource/assets/longhudou/chip_s5.png';
+                break;
+            case "500":
+                coin.source = 'resource/assets/longhudou/chip_s6.png';
+                break;
+            case "1000":
+                coin.source = 'resource/assets/longhudou/chip_s7.png';
+                break;
+            case "10000":
+                coin.source = 'resource/assets/longhudou/chip_s8.png';
+                break;
+        }
         let xRan = Math.floor(Math.random() * 150);
-        let yRan = Math.floor(Math.random() * 100);
+        let yRan = Math.floor(Math.random() * 150);
         egret.Tween.get(coin)
             .to({x: initialPlaceX, y: initialPlaceY}, 0)
-            .to({x: endPlaceX + xRan, y: endPlaceY + yRan}, 1000).call(() => {
-        });
-        egret.Tween.get(label)
-            .to({x: initialPlaceX, y: initialPlaceY}, 0)
-            .to({x: endPlaceX + xRan, y: endPlaceY + yRan}, 1000).call(() => {
+            .to({x: endPlaceX + xRan, y: endPlaceY + yRan}, 500).call(() => {
         });
     }
 
@@ -561,11 +646,27 @@ class TableUI extends eui.Component {
      * 移除元素
      */
     private removeSmallCoin() {
-        this.$children.forEach((item)=>{
-            if(item.name == "smallCoin"){
-                this.removeChild(item)
+        this.notice1Group.$children.forEach((item) => {
+            if (item.name == "smallCoin") {
+                this.notice1Group.removeChild(item)
             }
         });
+        this.notice2Group.$children.forEach((item) => {
+            if (item.name == "smallCoin") {
+                this.notice2Group.removeChild(item)
+            }
+        });
+        this.notice3Group.$children.forEach((item) => {
+            if (item.name == "smallCoin") {
+                this.notice3Group.removeChild(item)
+            }
+        });
+        this.total1.text = null;
+        this.total2.text = null;
+        this.total3.text = null;
+        this.myCoin1 = 0;
+        this.myCoin2 = 0;
+        this.myCoin3 = 0;
     }
 
     /**
@@ -584,5 +685,90 @@ class TableUI extends eui.Component {
         let one = coin % 5;
         let arr = [wan, qian, wuBai, bai, wuShi, shi, wu, one];
         callback(arr);
+    }
+
+    /*
+    展示总下注数量
+    */
+    private totalCoinsUpdate() {
+        let number1;
+        let number2;
+        let number3;
+
+                switch(this.currentChoose){
+                    case "0":
+                        this.myCoin1=this.myCoin1+Number($BetCoinChoose);
+                        egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll"))+this.myCoin1).toString());
+                        break;
+                    case "2":
+                        this.myCoin2=this.myCoin2+Number($BetCoinChoose);
+                        egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll"))+this.myCoin2).toString());
+                        break;
+                    case "1":
+                        this.myCoin3=this.myCoin3+Number($BetCoinChoose);
+                        egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll"))+this.myCoin3).toString());
+                        break;
+
+        }
+
+        $ContractInstance.methods.getTotalCoins().call().then((data) => {
+            number1 = Number($Web3.utils.fromWei(data[1], 'ether')).toFixed(0);
+            this.total1.text = this.myCoin1 + "/" + number1;
+            if (number1 == 0) {
+                this.total1.visible = false;
+            } else {
+                this.total1.visible = true;
+            }
+            number2 = Number($Web3.utils.fromWei(data[3], 'ether')).toFixed(0);
+            this.total2.text = this.myCoin2 + "/" + number2;
+            if (number2 == 0) {
+                this.total2.visible = false;
+            } else {
+                this.total2.visible = true;
+            }
+            number3 = Number($Web3.utils.fromWei(data[2], 'ether')).toFixed(0);
+            this.total3.text = this.myCoin3 + "/" + number3;
+            if (number3 == 0) {
+                this.total3.visible = false;
+            } else {
+                this.total3.visible = true;
+            }
+        });
+
+    }
+
+    /*
+        判断总筹码，并执行动画播放
+    */
+    private otherPlayerCoinsUpdate() {
+
+        let number1 = Number(this.total1.text);
+        let number2 = Number(this.total2.text);
+        let number3 = Number(this.total3.text);
+
+        if (this.totalNumber1 < number1) {
+
+            this.animaitonOtherPlayer(number1 - this.totalNumber1)//执行动画播放函数
+        }
+
+        if (this.totalNumber2 < number2) {
+
+            this.animaitonOtherPlayer(number2 - this.totalNumber2)//执行动画播放函数
+        }
+
+        if (this.totalNumber3 < number3) {
+
+            this.animaitonOtherPlayer(number3 - this.totalNumber3)//执行动画播放函数
+        }
+
+        this.totalNumber1 = number1;
+        this.totalNumber2 = number2;
+        this.totalNumber3 = number3;
+
+    }
+
+    private animaitonOtherPlayer(number: Number) {
+
+
     }
 }

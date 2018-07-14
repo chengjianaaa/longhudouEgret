@@ -15,6 +15,7 @@
         "libs"
     ],
     "exclude": [
-        "libs/web3.min.js"
+        "libs/web3.min.js",
+        "libs/ethers.min.js"
     ]
 }

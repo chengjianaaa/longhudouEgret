@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,description_json,chip_num1_png,chip_num2_png,chip_num3_png,chip_num4_png,chip1_png,chip2_png,chip3_png,chip4_png,clock_png,djxz_png,fof_png,girl_png,jc_png,jc_fof_bg_png,record_png,table_png,trend_png,xz_num_png,icon_help_png,icon_home_png,icon_share_png,icon_wallet_png,close_png,cp_bg_png,cp_he_png,cp_loong_png,cp_tiger_png,jg_he_png,jg_win_png,loong_png,popup_png,sub_title_bg_png,title_text_lszs_png,title_text_tzjs_png,title_text_wfsm_png,title_text_xzjl_png,vs_png,btn_sure_png,btn_sure_press_png,small_popup_png,chip1_xz_png,chip3_xz_png,chip4_xz_png,chip2_xz_png,loading_png,loading_light_png,help_png,home_png,share_png,wallet_png,tiger_png,chips_small_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,description_json,chip_num1_png,chip_num2_png,chip_num3_png,chip_num4_png,chip1_png,chip2_png,chip3_png,chip4_png,clock_png,djxz_png,fof_png,girl_png,jc_png,jc_fof_bg_png,record_png,table_png,trend_png,icon_help_png,icon_home_png,icon_share_png,icon_wallet_png,close_png,cp_bg_png,cp_he_png,cp_loong_png,cp_tiger_png,jg_he_png,jg_win_png,loong_png,popup_png,sub_title_bg_png,title_text_lszs_png,title_text_tzjs_png,title_text_wfsm_png,title_text_xzjl_png,vs_png,btn_sure_png,btn_sure_press_png,small_popup_png,chip1_xz_png,chip3_xz_png,chip4_xz_png,chip2_xz_png,loading_png,loading_light_png,help_png,home_png,share_png,wallet_png,tiger_png,chips_small_png,chip_s1_png,chip_s2_png,chip_s3_png,chip_s4_png,chip_s5_png,chip_s6_png,chip_s7_png,chip_s8_png,totalNum_fnt,totalNum_png",
 			"name": "preload"
 		},
 		{
@@ -664,6 +664,56 @@
 			"name": "chips_small_png",
 			"type": "image",
 			"url": "assets/longhudou/chips_small.png"
+		},
+		{
+			"name": "chip_s1_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s1.png"
+		},
+		{
+			"name": "chip_s2_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s2.png"
+		},
+		{
+			"name": "chip_s3_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s3.png"
+		},
+		{
+			"name": "chip_s4_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s4.png"
+		},
+		{
+			"name": "chip_s5_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s5.png"
+		},
+		{
+			"name": "chip_s6_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s6.png"
+		},
+		{
+			"name": "chip_s7_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s7.png"
+		},
+		{
+			"name": "chip_s8_png",
+			"type": "image",
+			"url": "assets/longhudou/chip_s8.png"
+		},
+		{
+			"name": "totalNum_fnt",
+			"type": "font",
+			"url": "assets/longhudou/totalNum.fnt"
+		},
+		{
+			"name": "totalNum_png",
+			"type": "image",
+			"url": "assets/longhudou/totalNum.png"
 		}
 	]
 }

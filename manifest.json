@@ -9,14 +9,14 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
-		"bin-debug/BalanceUI.js",
 		"bin-debug/MenuUI.js",
+		"bin-debug/AssetAdapter.js",
 		"bin-debug/CoinBtnUI.js",
 		"bin-debug/CroupierUI.js",
 		"bin-debug/HistorySkinUI.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
-		"bin-debug/AssetAdapter.js",
+		"bin-debug/BalanceUI.js",
 		"bin-debug/Platform.js",
 		"bin-debug/TableUI.js",
 		"bin-debug/ThemeAdapter.js",

@@ -39,9 +39,15 @@
      data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9">
 </div>
 <script src="./libs/web3.min.js"></script>
+<script src="./libs/ethers.min.js"
+        charset="utf-8"
+        type="text/javascript">
+</script>
 <script>
     const HOST = "ws://39.104.81.103:8561"
     const $Web3 = new Web3(HOST)
+    const $Wallet = ethers.Wallet;
+
     var loadScript = function (list, callback) {
         var loaded = 0
         var loadNext = function () {
