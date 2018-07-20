@@ -137,7 +137,7 @@ var InfoPanalUI = (function (_super) {
         label.height = 30;
         label.anchorOffsetX = 65;
         label.anchorOffsetY = 15;
-        label.textColor = '#8d7257';
+        label.textColor = 0x8d7257;
         this.recordG.addChild(label);
         label.x = offset;
         label.y = 150 + i * 120;

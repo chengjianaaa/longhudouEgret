@@ -82,10 +82,10 @@ var Main = (function (_super) {
             // custom lifecycle plugin
         });
         egret.lifecycle.onPause = function () {
-            egret.ticker.pause();
+            // egret.ticker.pause();
         };
         egret.lifecycle.onResume = function () {
-            egret.ticker.resume();
+            // egret.ticker.resume();
         };
         //inject the custom material parser
         //注入自定义的素材解析器
@@ -106,8 +106,10 @@ var Main = (function (_super) {
                     case 1:
                         _a.sent();
                         promise = this.getInfo();
+                        //播放音乐
                         promise.then(function () {
                             _this.createGameScene();
+                            document.getElementById('bgmMusic').play();
                         });
                         return [2 /*return*/];
                 }
@@ -174,6 +176,10 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        /*this.backSound=RES.getRes("back_mp3");
+        this. timer = new egret.Timer(5000, 1);
+        this.timer.addEventListener(egret.TimerEvent.TIMER, this.soundPlay, this);
+        this.timer.start();*/
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         /**
@@ -234,12 +240,6 @@ var Main = (function (_super) {
         var historyH = history.height;
         history.y = stageH - historyH;
         history.x = stageW - historyW;
-        /**
-         * alert模态框
-         * @type {AlertUI}
-         */
-        $Alert = new AlertUI();
-        this.addChild($Alert);
         $InfoPanal = new InfoPanalUI();
         $InfoPanal.bgBack.width = stageW;
         $InfoPanal.bgBack.height = stageH;
@@ -254,22 +254,18 @@ var Main = (function (_super) {
          */
         $loading = new DIYLoadingUI();
         this.addChild($loading);
-    };
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    Main.prototype.createBitmapByName = function (name) {
-        var result = new egret.Bitmap();
-        var texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
-    };
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    Main.prototype.startAnimation = function (result) {
+        /**
+         * password模态框
+         * @type {AlertUI}
+         */
+        $Password = new PasswordUI();
+        this.addChild($Password);
+        /**
+         * alert模态框
+         * @type {AlertUI}
+         */
+        $Alert = new AlertUI();
+        this.addChild($Alert);
     };
     return Main;
 }(eui.UILayer));

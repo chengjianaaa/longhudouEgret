@@ -21,6 +21,9 @@ class HistorySkinUI extends eui.Component {
         $InfoPanal.settleGroup.visible = false;
         $InfoPanal.tipsGroup.visible = false;
         $InfoPanal.recordGroup.visible = false;
+        $InfoPanal.gameInfo.visible = false;
+        $InfoPanal.sourceCodeG.visible = false;
+
         $InfoPanal.historyGroup.visible = true;
     }
 
@@ -31,5 +34,7 @@ class HistorySkinUI extends eui.Component {
         $InfoPanal.settleGroup.visible = false;
         $InfoPanal.tipsGroup.visible = false;
         $InfoPanal.historyGroup.visible = false;
+        $InfoPanal.gameInfo.visible = false;
+        $InfoPanal.sourceCodeG.visible = false;
     }
 }

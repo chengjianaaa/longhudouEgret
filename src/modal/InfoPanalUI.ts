@@ -24,8 +24,11 @@ class InfoPanalUI extends eui.Component {
     public he:eui.Image;
     public winCoin:eui.Label;
     public longCoin:eui.Label;
+    public longCoinWin:eui.Label;
     public huCoin:eui.Label;
+    public huCoinWin:eui.Label;
     public heCoin:eui.Label;
+    public heCoinWin:eui.Label;
     public longPoker:eui.Image;
     public huPoker:eui.Image;
     public tipsGroup:eui.Group;
@@ -35,7 +38,17 @@ class InfoPanalUI extends eui.Component {
     public resCoin:eui.Label;
     public recordS:eui.Scroller;
     public recordG:eui.Group;
+    public gameInfo:eui.Group;
+    public gameName:eui.Label;
+    public creator:eui.Label;
+    public gameAddr:eui.Label;
+    public createTime:eui.Label;
+    public balance:eui.Label;
+    public historyCoin:eui.Label;
+    public sourceCodeG:eui.Group;
+    public sourceCode:eui.Label;
     public close:eui.Image;
+
 
 
     private operation() {
@@ -52,6 +65,7 @@ class InfoPanalUI extends eui.Component {
             "2、下注虎, 1赔1。\n" +
             "3、下注和, 1赔8。";
     }
+
 
     /**
      * 生成近50场的结果
@@ -160,7 +174,7 @@ class InfoPanalUI extends eui.Component {
         label.height = 30;
         label.anchorOffsetX = 65;
         label.anchorOffsetY = 15;
-        label.textColor = '#8d7257';
+        label.textColor = 0x8d7257;
         this.recordG.addChild(label);
         label.x = offset;
         label.y = 150 + i * 120;

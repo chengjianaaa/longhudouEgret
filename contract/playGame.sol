@@ -35,6 +35,10 @@ contract PlayGame {
 
     }
 
+    function getPublicData() public constant returns (string, uint, address, uint, uint){
+        return (contractName, gameType, creator, creationTime, historyTotalCoins);
+    }
+
     function PlayGame(uint price1, uint price2, uint price3, uint price4, string _name){
         creationTime = getTimestamp();
         contractName = _name;
@@ -127,17 +131,22 @@ contract PlayGame {
 
     // 处理这个随机数,得到2个值
     function getXorPerson(uint number, uint start, uint long) private returns (uint) {
-        uint num = (number % (10 ** (13 - start))) / (10 ** (13 - start - long));
-        return num;
+        //uint num = (number % (10 ** (13 - start))) / (10 ** (13 - start - long));
+        return (number / (10 ** start)) % (10 ** long);
+        //return num;
     }
 
     // num1 => 龙
     // num2 => 虎
     function processXor() payable {
-        uint num1 = getXorPerson(xor, 2, 4) % 52;
-        uint num2 = getXorPerson(xor, 8, 4) % 52;
+        uint num1 = getXorPerson(xor, 2, 4) % (52 * 8);
+        uint num2 = getXorPerson(xor, 8, 4) % (52 * 8);
         uint dNum = num1 % 13;
         uint tNum = num2 % 13;
+        if (num1 < num2)//抽取的第一张
+        {
+            tNum = (num2 - 1) % 13;
+        }
         uint nSize = 50;
         if (dNum > tNum) {
             for (uint i = 0; i < dragon.length; i++) {
@@ -165,7 +174,13 @@ contract PlayGame {
             }
         } else {
             for (uint k = 0; k < draw.length; k++) {
-                transferCoin(draw[k], drawMap[draw[k]] * 8);
+                transferCoin(draw[k], drawMap[draw[k]] * 9);
+            }
+            for (uint l = 0; l < dragon.length; l++) {
+                transferCoin(dragon[l], dragonMap[dragon[l]] / 2);
+            }
+            for (uint m = 0; m < tiger.length; m++) {
+                transferCoin(tiger[m], tigerMap[tiger[m]] / 2);
             }
             if (resultHistory.length < nSize) {
                 resultHistory.push(2);
@@ -244,58 +259,5 @@ contract PlayGame {
 
     function getMsgValue() constant returns (uint) {
         return msg.value;
-    }
-
-    function registerInterval(address rContractAddr){
-        Interval(rContractAddr).getAddress(this);
-    }
-}
-
-contract Interval {
-    address [] intervalAddr;
-    uint nNumTest = 0;
-    uint nNumTestTotal = 0;
-    bool flagSign = false;
-
-    function getAddress(address _getAddr) {
-        intervalAddr.push(_getAddr);
-    }
-
-    // 后台定时器触发这个函数就可以了
-    function trigger(){
-        flagSign = false;
-        nNumTestTotal++;
-        for (uint i = 0; i < intervalAddr.length; i++) {
-            nNumTest++;
-            callFeed(intervalAddr[i]);
-        }
-    }
-
-    function getAddrLen() constant returns (address []){
-        return (intervalAddr);
-    }
-
-    function getTestNum() constant returns (uint, uint){
-        return (nNumTest, nNumTestTotal);
-    }
-
-    function getFlag() constant returns (bool){
-        return flagSign;
-    }
-
-    function chargeExist(address _addr) returns (bool){
-        bool flag = false;
-        for (uint i = 0; i < intervalAddr.length; i++) {
-            if (intervalAddr[i] == _addr) {
-                flag = true;
-            }
-        }
-        return flag;
-    }
-
-    // 传入合约地址
-    function callFeed(address contractAddr) {
-        flagSign = true;
-        PlayGame(contractAddr).getResult();
     }
 }

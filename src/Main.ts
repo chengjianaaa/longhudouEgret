@@ -38,11 +38,11 @@ class Main extends eui.UILayer {
         })
 
         egret.lifecycle.onPause = () => {
-            egret.ticker.pause();
+            // egret.ticker.pause();
         }
 
         egret.lifecycle.onResume = () => {
-            egret.ticker.resume();
+            // egret.ticker.resume();
         }
 
         //inject the custom material parser
@@ -60,8 +60,13 @@ class Main extends eui.UILayer {
     private async runGame() {
         await this.loadResource();
         let promise = this.getInfo();
+
+        //播放音乐
+        
+
         promise.then(() => {
             this.createGameScene()
+            document.getElementById('bgmMusic').play();
         });
         // this.createGameScene();
         // const result = await RES.getResAsync("description_json")
@@ -117,9 +122,13 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
+
+        /*this.backSound=RES.getRes("back_mp3");
+        this. timer = new egret.Timer(5000, 1);
+        this.timer.addEventListener(egret.TimerEvent.TIMER, this.soundPlay, this);
+        this.timer.start();*/
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
-
         /**
          * 下注的4个icon
          * @type {HistorySkinUI}
@@ -183,12 +192,6 @@ class Main extends eui.UILayer {
         let historyH = history.height;
         history.y = stageH - historyH;
         history.x = stageW - historyW;
-        /**
-         * alert模态框
-         * @type {AlertUI}
-         */
-        $Alert = new AlertUI();
-        this.addChild($Alert);
 
         $InfoPanal = new InfoPanalUI();
         $InfoPanal.bgBack.width = stageW;
@@ -205,25 +208,21 @@ class Main extends eui.UILayer {
          * @type {HistorySkinUI}
          */
         $loading = new DIYLoadingUI();
-        this.addChild($loading);
-    }
+        this.addChild($loading);     
 
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    private createBitmapByName(name: string): egret.Bitmap {
-        let result = new egret.Bitmap();
-        let texture: egret.Texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
-    }
-
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    private startAnimation(result: Array<any>): void {
-
+        /**
+         * password模态框
+         * @type {AlertUI}
+         */
+        $Password = new PasswordUI();
+        this.addChild($Password);
+ 
+        /**
+         * alert模态框
+         * @type {AlertUI}
+         */
+        $Alert = new AlertUI();
+        this.addChild($Alert);
+        
     }
 }

@@ -27,6 +27,9 @@ var AlertUI = (function (_super) {
         var _this = this;
         this.visible = false;
         this.btn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.url) {
+                window.open(_this.url);
+            }
             _this.visible = false;
             _this.label.text = "错误！";
         }, this);

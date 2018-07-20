@@ -27,6 +27,8 @@ var HistorySkinUI = (function (_super) {
         $InfoPanal.settleGroup.visible = false;
         $InfoPanal.tipsGroup.visible = false;
         $InfoPanal.recordGroup.visible = false;
+        $InfoPanal.gameInfo.visible = false;
+        $InfoPanal.sourceCodeG.visible = false;
         $InfoPanal.historyGroup.visible = true;
     };
     HistorySkinUI.prototype.showRecord = function () {
@@ -36,6 +38,8 @@ var HistorySkinUI = (function (_super) {
         $InfoPanal.settleGroup.visible = false;
         $InfoPanal.tipsGroup.visible = false;
         $InfoPanal.historyGroup.visible = false;
+        $InfoPanal.gameInfo.visible = false;
+        $InfoPanal.sourceCodeG.visible = false;
     };
     return HistorySkinUI;
 }(eui.Component));

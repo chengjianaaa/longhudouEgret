@@ -22,12 +22,14 @@ var TableUI = (function (_super) {
     }
     TableUI.prototype.childrenCreated = function () {
         var timer = new egret.Timer(1000, 0);
-        timer.addEventListener(egret.TimerEvent.TIMER, this.totalCoinsUpdate, this);
+        timer.addEventListener(egret.TimerEvent.TIMER, this.getTotalNumber, this);
+        timer.start();
         var timer1 = new egret.Timer(2000, 0);
         timer1.addEventListener(egret.TimerEvent.TIMER, this.otherPlayerCoinsUpdate, this);
-        this.total1.text = null;
-        this.total2.text = null;
-        this.total3.text = null;
+        timer1.start();
+        this.total1.visible = false;
+        this.total2.visible = false;
+        this.total3.visible = false;
         this.myCoin1 = 0;
         this.myCoin2 = 0;
         this.myCoin3 = 0;
@@ -51,37 +53,9 @@ var TableUI = (function (_super) {
         this.watchBet();
         this.betTips.play();
         this.timer = setInterval(this.timerBegin.bind(this), 1000);
-    };
-    /**
-     * 解锁
-     * @returns {Promise<any>}
-     */
-    TableUI.prototype.unlockAccount = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            $Web3.eth.personal.unlockAccount($MyAddress, _this.getActiveAccountPwd(), function (error, res) {
-                if (error) {
-                    // 没有keystore
-                    if (error.message.indexOf('file') !== -1) {
-                        _this.uploadKeyStore().then(function (flag) {
-                            if (flag) {
-                                $Web3.eth.personal.unlockAccount($MyAddress, _this.getActiveAccountPwd(), function (error, res) {
-                                    resolve(res);
-                                    reject(error);
-                                });
-                            }
-                        });
-                    }
-                    else {
-                        // 密码错误
-                        reject(error.message);
-                    }
-                }
-                if (res) {
-                    resolve(res);
-                }
-            });
-        });
+        this.number1 = this.totalNumber1;
+        this.number2 = this.totalNumber2;
+        this.number3 = this.totalNumber3;
     };
     /**
      * 下注函数
@@ -89,6 +63,21 @@ var TableUI = (function (_super) {
      * obj.name 下注对象
      */
     TableUI.prototype.betFun = function (obj, e) {
+        if (!ifWalletExist()) {
+            $Alert.visible = true;
+            $Alert.label.text = '请创建钱包并登录';
+            $Alert.url = 'location.origin';
+            return;
+        }
+        else {
+            $Alert.url = '';
+        }
+        var account = getActiveAccount(); //判断是否解锁钱包        
+        if (account.message) {
+            $Password.visible = true;
+            return;
+        }
+        var address = account.address;
         var balancePool = Number($balance.balancePool.text);
         var myBalance = Number($balance.myBalance.text);
         if (this.serverTime < 5) {
@@ -110,48 +99,35 @@ var TableUI = (function (_super) {
         switch (obj.name) {
             case "betLong":
                 choose = 0;
-                this.myBet[0] = $BetCoinChoose;
+                this.myBet[0] = this.myCoin1;
                 break;
             case "betHu":
                 choose = 1;
-                this.myBet[2] = $BetCoinChoose;
+                this.myBet[2] = this.myCoin3;
                 break;
             case "betHe":
                 choose = 2;
-                this.myBet[1] = $BetCoinChoose;
+                this.myBet[1] = this.myCoin2;
                 break;
         }
         this.currentChoose = choose + "";
         var weiCoin = $Web3.utils.toWei($BetCoinChoose, 'ether');
         $loading.visible = true;
         $loading.label.text = "正在下注···";
-        this.unlockAccount().then(function (bool) {
-            if (bool) {
-                $ContractInstance.methods.sendBetInfo($MyAddress, choose, Math.floor(Math.random() * (Math.pow(10, 12))), weiCoin)
-                    .send({
-                    from: $MyAddress,
-                    value: weiCoin,
-                    gas: 1000000,
-                    txType: 0,
-                })
-                    .on('error', function (err) {
-                    $loading.visible = false;
-                    $Alert.label.text = String(err);
-                    $Alert.visible = true;
-                })
-                    .on('receipt', function (receipt) {
-                    console.log(receipt);
-                });
-            }
-            else {
-                $loading.visible = false;
-                $Alert.visible = true;
-                $Alert.label.text = "下注失败，keystore not found";
-            }
-        }).catch(function (reason) {
+        $ContractInstance.methods.sendBetInfo(address, choose, Math.floor(Math.random() * (Math.pow(10, 12))), weiCoin)
+            .send({
+            from: address,
+            value: weiCoin,
+            gas: 1000000,
+            txType: 0,
+        })
+            .on('error', function (err) {
             $loading.visible = false;
+            $Alert.label.text = String(err);
             $Alert.visible = true;
-            $Alert.label.text = reason.message;
+        })
+            .on('receipt', function (receipt) {
+            console.log(receipt);
         });
     };
     /**
@@ -163,7 +139,7 @@ var TableUI = (function (_super) {
             .returnBetResult()
             .on('data', function (event) {
             if (event.returnValues) {
-                if (event.returnValues._addr == $MyAddress) {
+                if (event.returnValues._addr == getActiveAccount().address) {
                     $loading.visible = false;
                     if (event.returnValues._bool) {
                         // $Alert.visible = true;
@@ -185,7 +161,7 @@ var TableUI = (function (_super) {
         })
             .on('error', function (err) {
             if (err) {
-                if (event.returnValues._addr == $MyAddress) {
+                if (event.returnValues._addr == getActiveAccount().address) {
                     $loading.visible = false;
                     $Alert.visible = true;
                     $Alert.label.text = '下注失败！';
@@ -271,6 +247,9 @@ var TableUI = (function (_super) {
      */
     TableUI.prototype.settlement = function () {
         var _this = this;
+        this.myBet[0] = this.myCoin1;
+        this.myBet[2] = this.myCoin3;
+        this.myBet[1] = this.myCoin2;
         if (this.serverTime == 1) {
             this.serverTime = 0;
             this.time.text = this.serverTime + "S";
@@ -299,6 +278,9 @@ var TableUI = (function (_super) {
                 $InfoPanal.tipsGroup.visible = false;
                 $InfoPanal.recordGroup.visible = false;
                 $InfoPanal.historyGroup.visible = false;
+                $InfoPanal.settleGroup.visible = false;
+                $InfoPanal.gameInfo.visible = false;
+                $InfoPanal.sourceCodeG.visible = false;
                 $Alert.visible = false;
                 $InfoPanal.longWin.visible = dragonNum_1 > tigerNum_1;
                 $InfoPanal.huWin.visible = dragonNum_1 < tigerNum_1;
@@ -337,21 +319,66 @@ var TableUI = (function (_super) {
                     return Number(i);
                 });
                 var profits = 0;
+                var numberLong = 0;
+                var numberHe = 0;
+                var numberHu = 0;
                 if (dragonNum_1 > tigerNum_1) {
                     profits = _this.myBet[0] * (-1) + _this.myBet[1] + _this.myBet[2];
+                    numberLong = _this.myBet[0];
+                    numberHe = _this.myBet[1] * (-1);
+                    numberHu = _this.myBet[2] * (-1);
                 }
                 else if (dragonNum_1 < tigerNum_1) {
                     profits = _this.myBet[0] + _this.myBet[1] + _this.myBet[2] * (-1);
+                    numberLong = _this.myBet[0] * (-1);
+                    numberHe = _this.myBet[1] * (-1);
+                    numberHu = _this.myBet[2];
                 }
                 else {
                     profits = _this.myBet[0] + _this.myBet[1] * (-8) + _this.myBet[2];
+                    numberLong = _this.myBet[0] * (-1) / 2;
+                    numberHe = _this.myBet[1] * 8;
+                    numberHu = _this.myBet[2] * (-1) / 2;
                 }
-                $InfoPanal.winCoin.text = profits * (-1) + " FOF";
+                if (numberLong >= 0) {
+                    //textColor
+                    $InfoPanal.longCoinWin.text = "+" + numberLong + " FOF";
+                    $InfoPanal.longCoinWin.textColor = 0x008000;
+                }
+                else {
+                    $InfoPanal.longCoinWin.text = numberLong + " FOF";
+                    $InfoPanal.longCoinWin.textColor = 0xFF0000;
+                }
+                if (numberHu >= 0) {
+                    $InfoPanal.huCoinWin.text = "+" + numberHu + " FOF";
+                    $InfoPanal.huCoinWin.textColor = 0x008000;
+                }
+                else {
+                    $InfoPanal.huCoinWin.text = numberHu + " FOF";
+                    $InfoPanal.huCoinWin.textColor = 0xFF0000;
+                }
+                if (numberHe >= 0) {
+                    $InfoPanal.heCoinWin.text = "+" + numberHe + " FOF";
+                    $InfoPanal.heCoinWin.textColor = 0x008000;
+                }
+                else {
+                    $InfoPanal.heCoinWin.text = numberHe + " FOF";
+                    $InfoPanal.heCoinWin.textColor = 0xFF0000;
+                }
+                if (profits * (-1) >= 0) {
+                    $InfoPanal.winCoin.text = "+" + profits * (-1) + " FOF";
+                    $InfoPanal.winCoin.textColor = 0x008000;
+                }
+                else {
+                    $InfoPanal.winCoin.text = "-" + profits + " FOF";
+                    $InfoPanal.winCoin.textColor = 0xFF0000;
+                }
                 egret.localStorage.setItem("balanceCoisaAll", (Number(egret.localStorage.getItem("balanceCoisaAll")) + profits * (-1)).toString());
                 $BetRecord.forEach(function (item) {
                     item.result = dragonNum_1 > tigerNum_1 ? "0" : dragonNum_1 == tigerNum_1 ? "2" : "1";
                     item.winCoin = (item.result == item.betChoose ? "+" : "-") + item.betCoins;
                 });
+                _this.removeSmallCoin();
                 _this.readyTime = 0;
                 _this.readyTimeLabel.visible = true;
                 _this.time.visible = false;
@@ -359,6 +386,10 @@ var TableUI = (function (_super) {
                     $InfoPanal.visible = false;
                     $InfoPanal.visible = true;
                     $InfoPanal.settleGroup.visible = true;
+                    _this.readyTime = 10;
+                    _this.readyTimeLabel.visible = true;
+                    _this.time.visible = false;
+                    _this.timeNotice.text = "准备时间";
                 }, 3000);
                 _this.myBet = [0, 0, 0];
                 setTimeout(function () {
@@ -376,63 +407,8 @@ var TableUI = (function (_super) {
                         _this.huRes.source = "resource/assets/longhudou/poker/poker_back.png";
                     })
                         .to({ scaleX: -1 }, 500);
-                    _this.readyTime = 11;
-                    _this.readyTimeLabel.visible = true;
-                    _this.time.visible = false;
-                    _this.timeNotice.text = "准备时间";
-                }, 6000);
+                }, 9000);
             }
-        });
-    };
-    /**
-     * 截取当前活动账户的私钥最后9位为密码
-     */
-    TableUI.prototype.getActiveAccountPwd = function () {
-        // 获取钱包的私钥 todo
-        return $privateKey.substring($privateKey.length - 9);
-    };
-    /**
-     * 得到KeyStore文件的字符串
-     */
-    TableUI.prototype.getKeyStore = function () {
-        var myWallet = new $Wallet("0x" + $privateKey);
-        return myWallet.encrypt(this.getActiveAccountPwd());
-        // return $Web3.eth.accounts.encrypt($privateKey, this.getActiveAccountPwd())
-    };
-    /**
-     * 上传KeyStore
-     */
-    TableUI.prototype.uploadKeyStore = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.getKeyStore().then(function (json) {
-                var ts = new Date();
-                var name = ['UTC--', ts.toJSON().replace(/:/g, '-'), '--', $MyAddress.toString('hex')].join('');
-                var request = new egret.HttpRequest();
-                request.responseType = egret.HttpResponseType.TEXT;
-                request.open($uploadKeyStoreUrl, egret.HttpMethod.POST);
-                request.setRequestHeader("Content-Type", "application/json");
-                var params = [name, json];
-                request.send(JSON.stringify({
-                    "jsonrpc": "2.0",
-                    "method": "eth_uploadkeyfile",
-                    "params": params,
-                    "id": 1
-                }));
-                request.addEventListener(egret.Event.COMPLETE, function (event) {
-                    var request = event.currentTarget;
-                    if (JSON.parse(request.response).id == 1) {
-                        resolve(true);
-                    }
-                    else {
-                        reject(false);
-                    }
-                }, _this);
-                request.addEventListener(egret.IOErrorEvent.IO_ERROR, function (err) {
-                    console.log("error:" + String(err));
-                    reject(false);
-                }, _this);
-            });
         });
     };
     /**
@@ -441,6 +417,7 @@ var TableUI = (function (_super) {
     TableUI.prototype.betAnimation = function () {
         var _this = this;
         this.totalCoinsUpdate();
+        this.getTotalNumber();
         this.getLittleCoins(Number($BetCoinChoose), function (arr) {
             arr.forEach(function (item, value) {
                 for (var i = 0; i < item; i++) {
@@ -647,72 +624,98 @@ var TableUI = (function (_super) {
     展示总下注数量
     */
     TableUI.prototype.totalCoinsUpdate = function () {
-        var _this = this;
-        var number1;
-        var number2;
-        var number3;
         switch (this.currentChoose) {
             case "0":
                 this.myCoin1 = this.myCoin1 + Number($BetCoinChoose);
-                egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll")) + this.myCoin1).toString());
                 break;
             case "2":
                 this.myCoin2 = this.myCoin2 + Number($BetCoinChoose);
-                egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll")) + this.myCoin2).toString());
                 break;
             case "1":
                 this.myCoin3 = this.myCoin3 + Number($BetCoinChoose);
-                egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll")) + this.myCoin3).toString());
                 break;
         }
+        this.dataShowUpdate();
+        egret.localStorage.setItem("chipCoinsAll", (Number(egret.localStorage.getItem("chipCoinsAll")) + Number($BetCoinChoose)).toString());
+    };
+    TableUI.prototype.getTotalNumber = function () {
+        var _this = this;
         $ContractInstance.methods.getTotalCoins().call().then(function (data) {
-            number1 = Number($Web3.utils.fromWei(data[1], 'ether')).toFixed(0);
-            _this.total1.text = _this.myCoin1 + "/" + number1;
-            if (number1 == 0) {
-                _this.total1.visible = false;
-            }
-            else {
-                _this.total1.visible = true;
-            }
-            number2 = Number($Web3.utils.fromWei(data[3], 'ether')).toFixed(0);
-            _this.total2.text = _this.myCoin2 + "/" + number2;
-            if (number2 == 0) {
-                _this.total2.visible = false;
-            }
-            else {
-                _this.total2.visible = true;
-            }
-            number3 = Number($Web3.utils.fromWei(data[2], 'ether')).toFixed(0);
-            _this.total3.text = _this.myCoin3 + "/" + number3;
-            if (number3 == 0) {
-                _this.total3.visible = false;
-            }
-            else {
-                _this.total3.visible = true;
-            }
+            _this.totalNumber1 = Number($Web3.utils.fromWei(data[1], 'ether'));
+            _this.totalNumber2 = Number($Web3.utils.fromWei(data[3], 'ether'));
+            _this.totalNumber3 = Number($Web3.utils.fromWei(data[2], 'ether'));
+            _this.dataShowUpdate();
         });
+    };
+    TableUI.prototype.dataShowUpdate = function () {
+        if (this.totalNumber1 == 0) {
+            this.total1.visible = false;
+        }
+        else {
+            this.total1.visible = true;
+            this.total1.text = this.myCoin1 + "/" + this.totalNumber1;
+        }
+        if (this.totalNumber2 == 0) {
+            this.total2.visible = false;
+        }
+        else {
+            this.total2.visible = true;
+            this.total2.text = this.myCoin2 + "/" + this.totalNumber2;
+        }
+        if (this.totalNumber3 == 0) {
+            this.total3.visible = false;
+        }
+        else {
+            this.total3.visible = true;
+            this.total3.text = this.myCoin3 + "/" + this.totalNumber3;
+        }
     };
     /*
         判断总筹码，并执行动画播放
     */
     TableUI.prototype.otherPlayerCoinsUpdate = function () {
-        var number1 = Number(this.total1.text);
-        var number2 = Number(this.total2.text);
-        var number3 = Number(this.total3.text);
-        if (this.totalNumber1 < number1) {
-            this.animaitonOtherPlayer(number1 - this.totalNumber1); //执行动画播放函数
+        if (this.totalNumber1 > this.number1) {
+            this.animaitonOtherPlayer(this.totalNumber1 - this.number1, 1); //执行动画播放函数
+            this.number1 = this.totalNumber1;
         }
-        if (this.totalNumber2 < number2) {
-            this.animaitonOtherPlayer(number2 - this.totalNumber2); //执行动画播放函数
+        if (this.totalNumber2 > this.number2) {
+            this.animaitonOtherPlayer(this.totalNumber2 - this.number2, 2); //执行动画播放函数
+            this.number2 = this.totalNumber2;
         }
-        if (this.totalNumber3 < number3) {
-            this.animaitonOtherPlayer(number3 - this.totalNumber3); //执行动画播放函数
+        if (this.totalNumber3 > this.number3) {
+            this.animaitonOtherPlayer(this.totalNumber3 - this.number3, 3); //执行动画播放函数
+            this.number3 = this.totalNumber3;
         }
-        this.totalNumber1 = number1;
-        this.totalNumber2 = number2;
-        this.totalNumber3 = number3;
     };
-    TableUI.prototype.animaitonOtherPlayer = function (number) {
+    TableUI.prototype.animaitonOtherPlayer = function (number, obj) {
+        var initialPlaceX = -500;
+        var initialPlaceY = 0;
+        var endPlaceX = 20;
+        var endPlaceY = 50;
+        var coin = new eui.Image();
+        coin.source = 'resource/assets/longhudou/chip_s3.png';
+        coin.width = 88;
+        coin.height = 88;
+        coin.x = initialPlaceX;
+        coin.y = initialPlaceY;
+        coin.name = "smallCoin";
+        switch (obj) {
+            case "1":
+                this.notice1Group.addChild(coin);
+                break;
+            case "2":
+                this.notice2Group.addChild(coin);
+                break;
+            case "3":
+                this.notice3Group.addChild(coin);
+                break;
+        }
+        var xRan = Math.floor(Math.random() * 150);
+        var yRan = Math.floor(Math.random() * 150);
+        egret.Tween.get(coin)
+            .to({ x: initialPlaceX, y: initialPlaceY }, 0)
+            .to({ x: endPlaceX + xRan, y: endPlaceY + yRan }, 500).call(function () {
+        });
     };
     return TableUI;
 }(eui.Component));

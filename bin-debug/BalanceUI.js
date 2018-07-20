@@ -19,16 +19,19 @@ var BalanceUI = (function (_super) {
     BalanceUI.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.getBalance();
-        setInterval(this.getBalance.bind(this), 10000);
+        setInterval(this.getBalance.bind(this), 3000);
     };
     BalanceUI.prototype.getBalance = function () {
         var _this = this;
         $ContractInstance.methods.getCurrentBalance().call().then(function (data) {
             _this.balancePool.text = Number($Web3.utils.fromWei(data, 'ether')).toFixed(2);
         });
-        $Web3.eth.getBalance($MyAddress).then(function (balance) {
-            _this.myBalance.text = Number($Web3.utils.fromWei(balance, 'ether')).toFixed(2);
-        });
+        var wallet = getActiveAccount(); //勿删
+        if (wallet.address) {
+            $Web3.eth.getBalance(wallet.address).then(function (balance) {
+                _this.myBalance.text = Number($Web3.utils.fromWei(balance, 'ether')).toFixed(2);
+            });
+        }
     };
     return BalanceUI;
 }(eui.Component));
